@@ -1,0 +1,95 @@
+{
+    "apiUrl": "http://test-backoffice-sk.tvc-info.hr:8080", 
+    "serveWithFiles": [
+        {
+            "filePath": "/Users/gedesutarsa/Documents/projects-src/euro-zone-project/tvc/test-site-content/index.html" , 
+            "contentType": "text/html", 
+            "startPatterns": [
+                "/bo"
+            ]
+        }, 
+        {
+            "filePath": "/Users/gedesutarsa/Documents/projects-src/euro-zone-project/tvc/test-site-content/google-roboto.css" , 
+            "contentType": "text/css; charset=utf-8", 
+            "exactPattern": [
+                "/bo/google-roboto.css"
+            ]
+        } ,
+        {
+            
+            "filePath": "/Users/gedesutarsa/Documents/projects-src/euro-zone-project/tvc/test-site-content/roboto-ligt.ttf" , 
+            "contentType": "font/ttf", 
+            "exactPattern": [
+                "/bo/roboto-ligt.ttf"
+            ]
+        } ,
+        {
+            
+            "filePath": "/Users/gedesutarsa/Documents/projects-src/euro-zone-project/tvc/test-site-content/roboto-medium.ttf" , 
+            "contentType": "font/ttf", 
+            "exactPattern": [
+                "/bo/roboto-medium.ttf"
+            ]
+        } ,
+        {
+            
+            "filePath": "/Users/gedesutarsa/Documents/projects-src/euro-zone-project/tvc/test-site-content/roboto-regular.ttf" , 
+            "contentType": "font/ttf", 
+            "exactPattern": [
+                "/bo/roboto-regular.ttf"
+            ]
+        } ,
+        {
+            
+            "filePath": "/Users/gedesutarsa/Documents/projects-src/euro-zone-project/tvc/test-site-content/material-icon.css" , 
+            "contentType": "text/css", 
+            "exactPattern": [
+                "/bo/material-icon.css"
+            ]
+        } ,
+        {
+            "filePath": "/Users/gedesutarsa/Documents/projects-src/euro-zone-project/tvc/test-site-content/material.ttf" , 
+            "contentType": "font/ttf", 
+            "exactPattern": [
+                "/bo/material.ttf"
+            ]
+        }
+
+
+
+    ],
+    "lazyCacheDefinitions": [
+        {
+            "PathStartWithPattern": "/assets/i18n/" 
+        }
+        
+    ] , 
+    "preFetchPathDefinitions": [
+        {
+            "requestPath": "/favicon.ico" , 
+            "sourcePath": "http://localhost/tvc/favicon.ico"
+        },
+        {
+            "requestPath": "/bo/runtime.js" , 
+            "sourcePath": "http://localhost/tvc/runtime.js"
+        } ,
+         
+        {
+            "requestPath": "/bo/polyfills.js" , 
+            "sourcePath": "http://localhost/tvc/polyfills.js"
+        } , 
+        {
+            "requestPath": "/bo/styles.js" , 
+            "sourcePath": "http://localhost/tvc/styles.js"
+        },
+        {
+            "requestPath": "/bo/vendor.js" , 
+            "sourcePath": "http://localhost/tvc/vendor.js"
+        } ,
+        {
+            "requestPath": "/bo/main.js" , 
+            "sourcePath": "http://localhost/tvc/main.js"
+        }
+
+    ]
+}
