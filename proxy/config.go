@@ -10,4 +10,6 @@ type Config struct {
 	PreFetchPathDefinitions []PreFetchPathDefinition `json:"preFetchPathDefinitions"`
 	//ServeWithFiles definition for path that will handle with local file
 	ServeWithFiles []ServeWithFileDefinitionPlain `json:"serveWithFiles"`
+	//CachedPostRequestPaths post request that will be cached.
+	CachedPostRequestPaths []string `json:"cachedPostRequestPaths"`
 }

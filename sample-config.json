@@ -1,5 +1,8 @@
 {
     "apiUrl": "http://test-backoffice-sk.tvc-info.hr:8080", 
+    "cachedPostRequestPaths": [
+        "/backoffice/api/auth/login"
+    ] , 
     "serveWithFiles": [
         {
             "filePath": "/Users/gedesutarsa/Documents/projects-src/euro-zone-project/tvc/test-site-content/index.html" , 

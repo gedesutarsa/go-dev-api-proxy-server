@@ -26,12 +26,16 @@ func main() {
 	}
 	proxy.APIEndpointURL = cnf.APIURL
 	fmt.Printf("Url def: %s", proxy.APIEndpointURL)
-	mgr := proxy.GatewayHandler{LazyCacheDefinitions: cnf.LazyCacheDefinitions, PreFetchPathDefinitions: cnf.PreFetchPathDefinitions}
+	mgr := proxy.GatewayHandler{LazyCacheDefinitions: cnf.LazyCacheDefinitions, PreFetchPathDefinitions: cnf.PreFetchPathDefinitions, CachedPostRequestPaths: cnf.CachedPostRequestPaths}
+
 	mgr.RegisterServeFromFileConfig(cnf.ServeWithFiles)
 	mgr.Initialize()
 	r.PathPrefix("/").HandlerFunc(mgr.HandleHTTPRequest)
-
-	http.ListenAndServe(":8080", r)
+	port := os.Getenv("port")
+	if len(port) == 0 {
+		port = "8080"
+	}
+	http.ListenAndServe(fmt.Sprintf(":%s", port), r)
 
 }
 

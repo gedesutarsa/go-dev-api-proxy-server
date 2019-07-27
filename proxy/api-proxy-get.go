@@ -22,6 +22,7 @@ func sendGetRequest(url string, header http.Header) (statusCode int, responseHea
 	if err != nil {
 		return
 	}
+	CopyToHeader(header, req.Header)
 	res, err2 := http.DefaultClient.Do(req)
 	if err2 != nil {
 		err = err2

@@ -20,10 +20,14 @@ type RequestResult struct {
 type GatewayHandler struct {
 	//cachedRequest cached request
 	cachedRequest map[string]RequestResult
+	//cachedPostRequest post request that cached. if same path is requested for post, then request will not continued to proxy
+	cachedPostRequest map[string]RequestResult
 	//LazyCacheDefinitions lazy cache definitions
 	LazyCacheDefinitions []LazyCacheDefinition `json:"lazyCacheDefinitions"`
 	//PreFetchPathDefinitions prefetched cache definitions. load on startup
 	PreFetchPathDefinitions []PreFetchPathDefinition `json:"preFetchPathDefinitions"`
+	//CachedPostRequestPaths post request that will be cached.
+	CachedPostRequestPaths []string `json:"cachedPostRequestPaths"`
 	//serveFromFileExactMatch handler from file with exact match rule
 	serveFromFileExactMatch []ServeWithFileDefinition
 	//serveFromFileStartWithPattern path start for handle from file
@@ -57,13 +61,41 @@ func (p *GatewayHandler) HandleHTTPRequest(w http.ResponseWriter, r *http.Reques
 	case "PUT":
 		PutAPIProxy(w, r)
 	case "POST":
-		PostAPIProxy(w, r)
+		p.handlePostRequest(w, r)
 	case "GET":
 		p.handleGetRequest(w, r)
 	default:
 		w.WriteHeader(http.StatusBadGateway)
 		w.Write([]byte(fmt.Sprintf("Unhandled method: %s", r.Method)))
 	}
+}
+
+//handlePostRequest handle post request. if request is cache able, then request will be requested once and next request will be use prev result data
+func (p *GatewayHandler) handlePostRequest(w http.ResponseWriter, r *http.Request) {
+	reqPath := r.URL.Path
+	for _, pth := range p.CachedPostRequestPaths {
+		if pth == reqPath {
+			if cacheData, ok := p.cachedPostRequest[reqPath]; ok {
+				p.responseWithCache(w, cacheData)
+				return
+			}
+			statusCode, respHeader, body, errReq := sendPostRequest(r)
+			if errReq != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(errReq.Error()))
+				return
+			}
+			if statusCode == 200 {
+				p.cachedPostRequest[reqPath] = RequestResult{ResponseHeader: respHeader, ResponseBody: body}
+			}
+			CopyToHeader(respHeader, w.Header())
+			w.WriteHeader(statusCode)
+			w.Write(body)
+
+			return
+		}
+	}
+	PostAPIProxy(w, r)
 }
 
 //responseWithCache writer from cache to current request response
@@ -128,6 +160,7 @@ func (p *GatewayHandler) handleGetRequest(w http.ResponseWriter, r *http.Request
 //Initialize initialize manager
 func (p *GatewayHandler) Initialize() (err error) {
 	p.cachedRequest = make(map[string]RequestResult)
+	p.cachedPostRequest = make(map[string]RequestResult)
 	if len(p.PreFetchPathDefinitions) > 0 {
 		for _, def := range p.PreFetchPathDefinitions {
 			errCurrent := p.requestPredefinedCache(def)
